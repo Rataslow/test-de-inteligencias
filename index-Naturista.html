@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Inteligencias Múltiples - Naturalista</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #a8c0ff, #f0f8ff);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin: 20px auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .progress-bar {
+            background-color: #b0e0e6;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar div {
+            height: 20px;
+            background-color: #00bfff;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question {
+            margin: 20px 0;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .options button {
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #00bfff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .options button:hover {
+            background-color: #0077b6;
+        }
+
+        #finish-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #b0e0e6;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #finish-btn:hover {
+            background-color: #00bfff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test de Inteligencias Múltiples</h1>
+        <h2>Inteligencia Naturalista</h2>
+        <div class="progress-bar">
+            <div id="progress"></div>
+        </div>
+
+        <div id="quiz">
+            <div class="question" data-question="1">
+                <p>¿Qué actividad disfrutas más?</p>
+                <div class="options">
+                    <button onclick="nextQuestion(1)">Pasear al aire libre</button>
+                    <button onclick="nextQuestion(2)">Observar animales</button>
+                    <button onclick="nextQuestion(3)">Cuidar plantas</button>
+                </div>
+            </div>
+            <div class="question" data-question="2" style="display: none;">
+                <p>¿Qué te interesa más aprender?</p>
+                <div class="options">
+                    <button onclick="nextQuestion(1)">Ecología</button>
+                    <button onclick="nextQuestion(2)">Meteorología</button>
+                    <button onclick="nextQuestion(3)">Botánica</button>
+                </div>
+            </div>
+            <div class="question" data-question="3" style="display: none;">
+                <p>¿Qué tipo de entorno prefieres?</p>
+                <div class="options">
+                    <button onclick="nextQuestion(1)">Bosques</button>
+                    <button onclick="nextQuestion(2)">Playas</button>
+                    <button onclick="nextQuestion(3)">Montañas</button>
+                </div>
+            </div>
+            <div class="question" data-question="4" style="display: none;">
+                <p>¿Qué herramienta utilizas más?</p>
+                <div class="options">
+                    <button onclick="nextQuestion(1)">Binoculares</button>
+                    <button onclick="nextQuestion(2)">Microscopio</button>
+                    <button onclick="nextQuestion(3)">Cámara de fotos</button>
+                </div>
+            </div>
+            <div class="question" data-question="5" style="display: none;">
+                <p>¿Qué profesión te parece más atractiva?</p>
+                <div class="options">
+                    <button onclick="nextQuestion(1)">Veterinario</button>
+                    <button onclick="nextQuestion(2)">Biólogo</button>
+                    <button onclick="nextQuestion(3)">Guardaparque</button>
+                </div>
+            </div>
+        </div>
+
+        <button id="finish-btn" onclick="finishTest()" style="display: none;">Terminar Test</button>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 5;
+        const scores = []; // Almacena los valores seleccionados
+
+        function nextQuestion(score) {
+            const progress = document.getElementById("progress");
+            const currentElement = document.querySelector(`.question[data-question="${currentQuestion}"]`);
+            const nextElement = document.querySelector(`.question[data-question="${currentQuestion + 1}"]`);
+
+            // Guardar el puntaje de la respuesta seleccionada
+            scores.push(score);
+
+            currentElement.style.display = "none";
+            if (nextElement) {
+                nextElement.style.display = "block";
+            }
+
+            currentQuestion++;
+            progress.style.width = `${(currentQuestion / totalQuestions) * 100}%`;
+
+            if (currentQuestion > totalQuestions) {
+                document.getElementById("finish-btn").style.display = "block";
+            }
+        }
+
+        function finishTest() {
+            const averageScore = scores.reduce((a, b) => a + b, 0) / scores.length;
+            alert(`¡Gracias por completar el test! Tu puntaje promedio es: ${averageScore.toFixed(2)}`);
+
+            // Almacenar puntaje del test naturalista en localStorage
+            localStorage.setItem('naturalista', JSON.stringify(scores));
+
+            // Recuperar todos los puntajes de los tests desde localStorage
+            const linguisticScore = JSON.parse(localStorage.getItem('linguistica')) || [];
+            const musicalScore = JSON.parse(localStorage.getItem('musical')) || [];
+            const logicalMathematicalScore = JSON.parse(localStorage.getItem('logicoMatematico')) || [];
+            const intrapersonalScore = JSON.parse(localStorage.getItem('intrapersonal')) || [];
+            const interpersonalScore = JSON.parse(localStorage.getItem('interpersonal')) || [];
+            const corporalScore = JSON.parse(localStorage.getItem('corporal')) || [];
+            const naturalistaScore = JSON.parse(localStorage.getItem('naturalista')) || [];
+
+            // Generar el PDF con jsPDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.setFont("helvetica");
+            doc.setFontSize(12);
+            
+            doc.text("Resultados del Test de Inteligencias Múltiples", 20, 20);
+            doc.text("------------------------------------------------", 20, 30);
+
+            doc.text(`1. Inteligencia Lingüística: ${calculateAverageScore(linguisticScore)}`, 20, 40);
+            doc.text(`2. Inteligencia Musical: ${calculateAverageScore(musicalScore)}`, 20, 50);
+            doc.text(`3. Inteligencia Lógico-Matemática: ${calculateAverageScore(logicalMathematicalScore)}`, 20, 60);
+            doc.text(`4. Inteligencia Intrapersonal: ${calculateAverageScore(intrapersonalScore)}`, 20, 70);
+            doc.text(`5. Inteligencia Interpersonal: ${calculateAverageScore(interpersonalScore)}`, 20, 80);
+            doc.text(`6. Inteligencia Corporal: ${calculateAverageScore(corporalScore)}`, 20, 90);
+            doc.text(`7. Inteligencia Naturalista: ${calculateAverageScore(naturalistaScore)}`, 20, 100);
+
+            // Descargar el PDF
+            doc.save("resultados_test_inteligencias_multiples.pdf");
+        }
+
+        function calculateAverageScore(scores) {
+            return scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2) : 0;
+        }
+    </script>
+</body>
+</html>
